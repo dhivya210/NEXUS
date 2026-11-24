@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./backend
+    env_file: .env
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL_DOCKER:-sqlite:////data/nexus.db}
+    volumes:
+      - nexus-data:/data
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXUS_BACKEND_URL: http://backend:8000
+    depends_on:
+      - backend
+
+volumes:
+  nexus-data:
